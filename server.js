@@ -1,36 +1,46 @@
 
-require('dotenv').config()
-const express = require('express')
-const logger = require('morgan')
-const app = express()
-const PORT = process.env.PORT || 3001
-const cors = require('cors')
-const allHeroes = require('./db/all');
+// GET ENVIRONMENTAL VARIABLES
+require("dotenv").config();
 
-// MIDDLEWARE  -> REQ => MIDDLEWARE => RES => RES.JSON
-app.use(logger('dev')); // MORGAN..is just a logger
-// THESE DEAL WITH RECEIVING DATA...req.body
-app.use(express.urlencoded({extended:false}))
-app.use(express.json())
-app.use(cors())
+//GET PORT FROM ENV VARIABLES
+const PORT = process.env.PORT;
+const cors = require("cors");
+const corsOptions = require("./configs/cors.js");
+// IMPORT DEPENDENCIES
+//MONGO CONNECTION
+const mongoose = require("./db/connection");
 
-// DEFAULT ROUTE
-app.get('/', (req, res) => {
-    res.json({
-        status:200,
-        msg: 'you have hit the default route...nothing to see here'
-    })
-})
+//CORS
+// const corsOptions = require("./configs/cors.js");
 
-// FRUITS CONTROLLER
-const heroController = require('./controllers/hero.js')
-app.use('/hero', heroController)
+//Bringing in Express
+const express = require("express");
+const app = express();
 
-// // FARM CONTROLLER
-// const farmsController = require('./controllers/farms.js')
-// app.use('/farms', farmsController)
+//OTHER IMPORTS
+const morgan = require("morgan");
+const heroRouter = require("./controllers/hero");
 
-// OUR APP IS NOW LISTENING ON THE PORT
+////////////
+//MIDDLEWARE
+////////////
+let NODE_ENV = 'production'
+NODE_ENV === "production" ? app.use(cors(corsOptions)) : app.use(cors());
+app.use(express.json());
+app.use(morgan("tiny")); //logging
+// app.use(cors())
+///////////////
+//Routes and Routers
+//////////////
+
+//Route for testing server is working
+app.get("/", (req, res) => {
+  res.json({ hello: "Servering" });
+});
+
+// Dog Routes send to dog router
+app.use("/hero", heroRouter);
+//LISTENER
 app.listen(PORT, () => {
-    console.log(`listening in on port: ${PORT}`)
-})
+  console.log(`Your are listening on port ${PORT}`);
+});

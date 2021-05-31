@@ -1,22 +1,25 @@
-// import mongoose
-const mongoose = require('mongoose');
-// connection URI
-//   service              port#        db name
-const MONGODB_URI = 'mongodb://localhost:27017/' + 'hero';
-// config params
-const config = {
-	useUnifiedTopology: true,
-	useNewUrlParser: true,
-	useFindAndModify: false,
-};
-// connect to the URI
-mongoose.connect(MONGODB_URI, config);
-// connect to the DB connection
-const db = mongoose.connection;
-// additional connection messages
-db.on('error', (err) => console.log(err.message + ' is mongod not running'));
-db.on('connected', () => console.log('mongo connected: ', MONGODB_URI));
-db.on('disconnected', () => console.log('mongo disconnected'));
+// LOAD ENVIRONMENTAL VARIABLES
+require("dotenv").config();
 
-// export mongoose
+// IMPORT DEPENDENCIES
+const mongoose = require("mongoose");
+
+// PULL OUT ENVIRONMENTAL VARIABLE FROM PROCESS.ENV OBJECT
+const MONGODB_URI = process.env.MONGODB_URI;
+
+// Optional Configuration Object to Remove Mongo Deprecation Warnings
+const config = { useUnifiedTopology: true, useNewUrlParser: true };
+
+//Establish Connection to Database
+mongoose.connect(MONGODB_URI, config);
+
+// Create Database Connection message for Open, Close, Error
+mongoose.connection
+  .on("open", () => console.log("MONGO CONNECTION IS OPEN"))
+  .on("close", () => console.log("MONGO CONNECTION IS CLOSED"))
+  .on("error", (error) =>
+    console.log("MONGO CONNECTION ERROR \n***************\n", error)
+  );
+
+// EXPORT MONGOOSE CONNECTION TO USE IN SERVER.JS
 module.exports = mongoose;
