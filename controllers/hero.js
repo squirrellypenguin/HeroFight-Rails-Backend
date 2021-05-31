@@ -10,14 +10,14 @@ const db = mongoose.connection;
 const Hero = require('../models/hero');
 
 // // SEED ROUTE
-// router.get('/seed', async (req,res) => {
-//     await Fruit.deleteMany({})
-//     const fruitsArr = await Fruit.insertMany(fruits)
-//     res.json({
-//         status: 200,
-//         data: fruitsArr
-//     })
-// })
+router.get('/seed', async (req,res) => {
+    Hero.deleteMany({}).then(() => {
+	Hero.insertMany(allHeroes).then((heroes) => {
+		console.log('our fighters', heroes);
+		db.close();
+	});
+});
+})
 
 // INDEX ROUTE - returns all things
 
