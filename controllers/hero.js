@@ -8,6 +8,7 @@ const mongoose = require('../db/connection');
 const db = mongoose.connection;
 // import the Fruit model
 const Hero = require('../models/hero');
+const allHeroes = require('../db/all');
 
 // // SEED ROUTE
 router.get('/seed', async (req,res) => {
