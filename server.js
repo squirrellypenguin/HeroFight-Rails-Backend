@@ -5,6 +5,7 @@ const logger = require('morgan')
 const app = express()
 const PORT = process.env.PORT || 3001
 const cors = require('cors')
+const allHeroes = require('./db/all');
 
 // MIDDLEWARE  -> REQ => MIDDLEWARE => RES => RES.JSON
 app.use(logger('dev')); // MORGAN..is just a logger
