@@ -49,6 +49,14 @@ router.get('/:slug', async (req, res) => {
     })
 });
 
+router.get('/:id', async (req, res) => {
+	await Hero.findByIdAndUpdate(req.params.id, req.body, {new: true})
+    const hero = await Hero.find({})
+    res.json({
+       
+        data: hero
+    });
+});
 // // CREATE- create a single thing
 
 
